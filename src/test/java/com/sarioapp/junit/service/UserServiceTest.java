@@ -1,13 +1,18 @@
 package com.sarioapp.junit.service;
 
+import com.sarioapp.junit.dto.User;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class UserServiceTest {
+class UserServiceTest {
 
     @Test
-    void test() {
-        assertTrue(false);
+    void usersIsEmptyIfNoUsersAdded() {
+        UserService userService = new UserService();
+        List<User> users = userService.getAll();
+        assertTrue(users.isEmpty());
     }
 }
