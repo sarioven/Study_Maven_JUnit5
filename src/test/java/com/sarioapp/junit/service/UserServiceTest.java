@@ -1,9 +1,6 @@
 package com.sarioapp.junit.service;
 
 import com.sarioapp.junit.dto.User;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.collection.IsEmptyCollection;
-import org.hamcrest.collection.IsMapContaining;
 import org.junit.jupiter.api.*;
 
 import java.util.List;
@@ -11,7 +8,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.collection.IsEmptyCollection.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
@@ -55,6 +51,7 @@ class UserServiceTest {
     }
 
     @Test
+    @Tag("login")
     void loginSuccessIfUserExists() {
         userService.add(IVAN);
         Optional<User> maybeUser = userService.login(IVAN.getUsername(), IVAN.getPassword());
@@ -67,6 +64,7 @@ class UserServiceTest {
     }
 
     @Test
+    @Tag("login")
     void throwExceptionIfUsernameOrPasswordIsNull() {
 //        try {
 //            userService.login(null, "exception");
@@ -101,6 +99,7 @@ class UserServiceTest {
     }
 
     @Test
+    @Tag("login")
     void loginFailIfPasswordIsNotCorrect() {
         userService.add(IVAN);
         Optional<User> maybeUser = userService.login(IVAN.getUsername(), "fail");
@@ -109,6 +108,7 @@ class UserServiceTest {
     }
 
     @Test
+    @Tag("login")
     void loginFailIfUserDoesNotExist() {
         userService.add(IVAN);
         Optional<User> maybeUser = userService.login("fail", IVAN.getPassword());
