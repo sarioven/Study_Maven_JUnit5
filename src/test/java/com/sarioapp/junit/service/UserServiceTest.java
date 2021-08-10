@@ -1,13 +1,18 @@
 package com.sarioapp.junit.service;
 
 import com.sarioapp.junit.dto.User;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.collection.IsEmptyCollection;
+import org.hamcrest.collection.IsMapContaining;
 import org.junit.jupiter.api.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.collection.IsEmptyCollection.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class UserServiceTest {
@@ -42,7 +47,11 @@ class UserServiceTest {
 
         List<User> users = userService.getAll();
 
-        assertEquals(2, users.size());
+        /// Hamcrest
+        //MatcherAssert.assertThat(users, empty());
+
+//        assertEquals(2, users.size());
+        assertThat(users).hasSize(2);
     }
 
     @Test
@@ -50,8 +59,26 @@ class UserServiceTest {
         userService.add(IVAN);
         Optional<User> maybeUser = userService.login(IVAN.getUsername(), IVAN.getPassword());
 
-        assertTrue(maybeUser.isPresent());
-        maybeUser.ifPresent(user -> assertEquals(IVAN, user));
+//        assertTrue(maybeUser.isPresent());
+//        maybeUser.ifPresent(user -> assertEquals(IVAN, user));
+
+        assertThat(maybeUser).isPresent();
+        maybeUser.ifPresent(user -> assertThat(user).isEqualTo(IVAN));
+    }
+
+    @Test
+    void usersConvertedToMapById() {
+        userService.add(IVAN, PETR);
+
+        Map<Integer, User> users = userService.getAllConvertedById();
+
+        // Hamcrest
+        //MatcherAssert.assertThat(users, IsMapContaining.hasKey(IVAN.getId()));
+
+        assertAll(
+                () -> assertThat(users).containsKeys(IVAN.getId(), PETR.getId()),
+                () -> assertThat(users).containsValues(IVAN, PETR)
+        );
     }
 
     @Test
